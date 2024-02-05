@@ -1,3 +1,3 @@
-from .main import RegexMatch
+from .main import ExcludeSqlPredicates
 
-__all__ = ["RegexMatch"]
+__all__ = ["ExcludeSqlPredicates"]
