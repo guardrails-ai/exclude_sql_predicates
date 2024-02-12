@@ -78,5 +78,5 @@ guard.parse("""
 ## API Reference
 
 `__init__`
-- 
+
 - `on_fail`: The policy to enact when a validator fails.
