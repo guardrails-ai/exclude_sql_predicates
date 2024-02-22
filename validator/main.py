@@ -8,6 +8,8 @@ from guardrails.validator_base import (
     register_validator,
 )
 
+from sqlglot import exp, parse
+
 
 @register_validator(name="guardrails/exclude_sql_predicates", data_type="string")
 class ExcludeSqlPredicates(Validator):
@@ -15,11 +17,11 @@ class ExcludeSqlPredicates(Validator):
 
     **Key Properties**
 
-    | Property                      | Description                       |
-    | ----------------------------- | --------------------------------- |
-    | Name for `format` attribute   | `exclude-sql-predicates`          |
-    | Supported data types          | `string`                          |
-    | Programmatic fix              | None                              |
+    | Property                      | Description                           |
+    | ----------------------------- | ------------------------------------- |
+    | Name for `format` attribute   | `guardrails/exclude-sql-predicates`   |
+    | Supported data types          | `string`                              |
+    | Programmatic fix              | None                                  |
 
     Args:
         predicates: The list of predicates to avoid.
@@ -30,19 +32,18 @@ class ExcludeSqlPredicates(Validator):
         self._predicates = set(predicates)
 
     def validate(self, value: Any, metadata: Dict) -> ValidationResult:
-        from sqlglot import exp, parse
+        """Validation method of the validator."""
 
         expressions = parse(value)
         for expression in expressions:
             if expression is None:
                 continue
             for pred in self._predicates:
-                print(pred)
                 try:
                     getattr(exp, pred)
-                except AttributeError:
-                    raise ValueError(f"Predicate {pred} does not exist")
-                if len(list(expression.find_all(getattr(exp, pred)))):
+                except AttributeError as e:
+                    raise ValueError(f"Predicate {pred} does not exist") from e
+                if list(expression.find_all(getattr(exp, pred))):
                     return FailResult(
                         error_message=f"SQL query contains predicate {pred}",
                         fix_value="",
