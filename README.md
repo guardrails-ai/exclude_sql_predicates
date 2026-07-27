@@ -1,3 +1,24 @@
+# ⚠️ This validator has moved
+
+This validator now lives in the [Guardrails Hub monorepo](https://github.com/guardrails-ai/guardrails-hub-monorepo/tree/main/exclude_sql_predicates/py).
+**This repository is archived and no longer maintained** — please open issues and pull
+requests on the monorepo instead.
+
+```bash
+pip install guardrails-ai-exclude-sql-predicates
+```
+
+```python
+from guardrails import Guard
+from guardrails_ai.exclude_sql_predicates import ExcludeSqlPredicates
+
+guard = Guard().use(ExcludeSqlPredicates)
+```
+
+The registered validator name is unchanged, so existing guards keep working.
+
+---
+
 # Overview
 
 | Developed by | Guardrails AI |
